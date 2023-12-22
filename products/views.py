@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from products.models import Product
 from products.serializers import ProductSerializer
 from django.http import Http404
+from products.permissions import IsStaffEditorPermission
 
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -18,7 +19,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
     authentication_classes = [authentication.SessionAuthentication]
 
     def perform_create(self, serializer):
@@ -30,6 +31,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 # class ProductListAPIView(generics.ListAPIView):
