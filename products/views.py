@@ -1,13 +1,11 @@
-from rest_framework import generics, mixins, permissions, authentication
+from rest_framework import generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-
 from products.models import Product
+from api.mixins import StaffEditorPermissionMixin
 from products.serializers import ProductSerializer
-from django.http import Http404
-from products.permissions import IsStaffEditorPermission
 
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -16,11 +14,13 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     # lookup_field = 'pk'
 
 
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView, StaffEditorPermissionMixin):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
-    authentication_classes = [authentication.SessionAuthentication, authentication.TokenAuthentication]
+    # authentication_classes = [
+    #     authentication.SessionAuthentication,
+    #     TokenAuthentication,
+    # ]
 
     def perform_create(self, serializer):
         # serializer.save(user=self.request.user)
