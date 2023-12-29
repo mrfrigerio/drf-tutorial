@@ -8,4 +8,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(api_urls)),
     path("api/product/", include(product_urls)),
+    path("api/v2/", include("cfehome.routers")),
 ]
